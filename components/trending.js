@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 import { useCategories } from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
+import TrendingLoader from "./skellton-loders/trending-loader";
 
 function TrendingSection() {
   const [wishlist, setWishlist] = useState([]);
@@ -69,7 +70,7 @@ function TrendingSection() {
         </div>
       </div>
       {loadingProducts ? (
-        <p className="text-center text-gray-500">Loading products...</p>
+        <TrendingLoader/>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr">
           {visibleProducts.length > 0 ? (

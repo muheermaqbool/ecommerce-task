@@ -6,14 +6,15 @@ import Peoplesays from "./peoplesays";
 import Blog from "./blog";
 import Footer from "./footer";
 import Trending from "./trending";
+import HeroSecLoader from "./skellton-loders/herro-sec-loader";
 
 function HeroSection() {
   const { data: categories = [], isLoading, isError, error } = useCategories();
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64 text-gray-500">
-        Loading collections...
+      <div className="">
+        <HeroSecLoader/>
       </div>
     );
   }
@@ -28,7 +29,7 @@ function HeroSection() {
 
   return (
     <>
-      <div className="max-w-7xl px-6 grid grid-cols-1 md:grid-cols-6 gap-2 md:grid-rows-2">
+      <div className="max-w-7xl px-6 grid grid-cols-1 md:grid-cols-6 gap-2 md:grid-rows-2 mx-auto md:mx-auto">
         {categories[0] && (
           <div className="lg:col-span-4 md:col-span-2 row-span-2 relative rounded-2xl overflow-hidden min-h-[400px]">
             <img
@@ -81,7 +82,7 @@ function HeroSection() {
             Our favorite combinations for casual outfits that can inspire your
             daily activity
           </p>
-          <button className="mt-4 border border-black px-4 py-2 rounded-full text-sm font-semibold">
+          <button className="mt-4 border border-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-black hover:text-white transition max-w-fit cursor-pointer">
             Browse Inspirations
           </button>
         </div>

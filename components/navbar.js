@@ -1,7 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import {
-  SearchIcon,
   X,
   ChevronDown,
   UserRound,
@@ -11,51 +10,25 @@ import {
 } from "lucide-react";
 import { useProducts } from "@/hooks/useProducts";
 import Link from "next/link";
+import SearchBar from "./searchbar";
 
 export default function Navbar() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [openCategoryMenu, setOpenCategoryMenu] = useState(false);
 
-  const { data: products, isLoading } = useProducts(searchTerm);
+  const { data: products } = useProducts();
   const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
+  // Close category dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
         setOpenCategoryMenu(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const categories = [
-    "all",
-    ...(products
-      ?.map((p) => p?.category?.slug)
-      ?.filter(Boolean)
-      ?.filter((v, i, arr) => arr.indexOf(v) === i)
-      ?.slice(0, 4) || []),
-  ];
-  // Filter products based on search term and selected category
-  const filteredProducts =
-    products?.filter((p) => {
-      const matchesSearch =
-        p?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p?.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p?.category?.name?.toLowerCase().includes(searchTerm.toLowerCase());
-
-      const matchesCategory =
-        selectedCategory === "all" ||
-        p?.category?.slug?.toLowerCase() === selectedCategory.toLowerCase();
-
-      return matchesSearch && matchesCategory;
-    }) || [];
 
   return (
     <nav className="w-full">
@@ -64,7 +37,6 @@ export default function Navbar() {
           <p>english</p>
           <p>dollar</p>
         </div>
-        {/* Desktop top links */}
         <div className="hidden md:flex space-x-8">
           <a href="#" className="text-sm text-gray-500 capitalize">
             Tracking package
@@ -86,85 +58,19 @@ export default function Navbar() {
         className="hidden md:flex justify-between p-6 relative"
         ref={dropdownRef}
       >
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 mx-auto">
           <p className="font-bold text-2xl">ECOMMERCE</p>
 
-          {/* Search box */}
+          {/* Search */}
           <div className="relative w-[500px]">
-            <div className="rounded-full flex items-center border border-gray-300 px-3 py-1 gap-2 bg-white">
-              <input
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setShowDropdown(true);
-                }}
-                placeholder="Search products by name or description..."
-                type="text"
-                className="flex-grow outline-none text-sm p-1"
-              />
-              <SearchIcon size={18} className="text-gray-500" />
-            </div>
-
-            {/* Dropdown panel */}
-            {showDropdown && (
-              <div className="absolute mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-[400px] overflow-y-auto z-50 p-4">
-                {/* Filters */}
-                <div className="flex gap-3 mb-3 flex-wrap">
-                  {categories.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-3 py-1 rounded-full text-sm capitalize ${
-                        selectedCategory === cat
-                          ? "bg-black text-white"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Results */}
-                {isLoading && (
-                  <p className="p-2 text-sm text-gray-500">Loading...</p>
-                )}
-                {!isLoading && filteredProducts.length === 0 && (
-                  <p className="p-2 text-sm text-gray-500">No results found</p>
-                )}
-                {!isLoading &&
-                  filteredProducts.map((p) => (
-                    <div
-                      key={p?.id}
-                      className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer border-b last:border-none"
-                      onClick={() => {
-                        setSearchTerm(p?.title);
-                        setShowDropdown(false);
-                      }}
-                    >
-                      {p?.images?.[0] && (
-                        <img
-                          src={p.images[0]}
-                          alt={p.title}
-                          className="w-12 h-12 rounded-md object-cover border"
-                        />
-                      )}
-                      <div className="flex flex-col">
-                        <p className="font-medium text-sm">{p?.title}</p>
-                        <span className="text-[10px] bg-gray-200 px-2 py-1 rounded-full w-fit mt-1">
-                          {p?.category?.name || "Uncategorized"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
+            <SearchBar />
           </div>
 
+          {/* Category Menu */}
           <div className="relative">
             <button
               onClick={() => setOpenCategoryMenu(!openCategoryMenu)}
-              className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-black"
+              className="cursor-pointer flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-black"
             >
               All Categories
               <ChevronDown
@@ -176,7 +82,7 @@ export default function Navbar() {
             </button>
 
             {openCategoryMenu && (
-              <div className="absolute  mt-2 bg-white border rounded-lg shadow-lg w-[500px] p-6 flex justify-between gap-6 z-50 h-[500px] overflow-hidden overflow-y-auto">
+              <div className="absolute mt-2 bg-white border rounded-lg shadow-lg w-[500px] p-6 flex justify-between gap-6 z-50 h-[500px] overflow-hidden overflow-y-auto">
                 <div>
                   <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">
                     Categories
@@ -193,11 +99,7 @@ export default function Navbar() {
                       .map((cat) => (
                         <li
                           key={cat?.id}
-                          onClick={() => {
-                            setSelectedCategory(cat?.slug);
-                            setOpenCategoryMenu(false);
-                          }}
-                          className="flex items-center jus gap-3 px-2 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+                          className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-100 cursor-pointer"
                         >
                           {cat?.image && (
                             <img
@@ -219,6 +121,7 @@ export default function Navbar() {
                   </ul>
                 </div>
 
+                {/* Featured */}
                 <div>
                   <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">
                     Featured
@@ -247,14 +150,24 @@ export default function Navbar() {
           <p>Special Event</p>
         </div>
 
+        {/* Icons */}
         <div className="flex items-center gap-4">
-          <Heart size={20} />
-          <UserRound size={20} />
-          <ShoppingCart size={20} />
+          <Heart
+            size={20}
+            className="cursor-pointer text-gray-600 hover:text-red-500 transition-colors duration-200"
+          />
+          <UserRound
+            size={20}
+            className="cursor-pointer text-gray-600 hover:text-black transition-colors duration-200"
+          />
+          <ShoppingCart
+            size={20}
+            className="cursor-pointer text-gray-600 hover:text-blue-500 transition-colors duration-200"
+          />
         </div>
       </div>
 
-      {/*  Tablet Navbar */}
+      {/* Mobile Navbar */}
       <div className="md:hidden px-6 py-3 flex items-center justify-between border-t">
         <div className="flex items-center justify-between w-full">
           <p className="font-bold text-xl">ECOMMERCE</p>
@@ -268,22 +181,9 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-white border-t shadow-lg p-6 space-y-6">
           <div className="relative">
-            <div className="rounded-full flex items-center border border-gray-300 px-3 py-2 gap-2">
-              <input
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setShowDropdown(true);
-                }}
-                placeholder="Search products..."
-                type="text"
-                className="flex-grow outline-none text-sm"
-              />
-              <SearchIcon size={18} className="text-gray-500" />
-            </div>
+            <SearchBar isMobile />
           </div>
 
-          {/* Links */}
           <div className="flex flex-col gap-4 text-gray-700 text-sm">
             <p>All Categories</p>
             <p>Gift cards</p>
@@ -294,7 +194,6 @@ export default function Navbar() {
             <Link href="contact-us">Contact Us</Link>
           </div>
 
-          {/* Icons */}
           <div className="flex gap-6 pt-4">
             <Heart size={22} />
             <UserRound size={22} />
