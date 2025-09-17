@@ -2,22 +2,22 @@ import React from 'react';
 
 function Blog() {
   return (
-    <div className='p-6 '>
+    <div className='p-6 mx-auto max-w-7xl my-10'>
         <p className='font-bold text-2xl mb-5'>From the Blog</p>
-    <div className="max-w-6xl flex items-center gap-10 justify-start flex-col md:flex-row lg:mx-0 mx-auto">
+    <div className="max-w-6xl flex items-center gap-10 justify-start flex-col md:flex-row ">
  
       {/* Image Section */}
-      <div className="flex-1">
+      <div className="flex-1 w-full">
         <img
           src='/blog-img.png'
           alt="Clothes Rack"
-          className="rounded-lg shadow-md w-full h-[300px] object-cover object-center"
+          className="rounded-3xl shadow-md w-full h-[300px] object-cover object "
         />
       </div>
 
       {/* Text Section */}
       <div className="flex-1">
-        <h2 className="text-3xl font-semibold mb-4">
+        <h2 className="text-5xl font-semibold mb-4">
           How to combine your daily outfit to looks fresh and cool.
         </h2>
         <p className="text-gray-600 mb-6">

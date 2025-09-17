@@ -36,7 +36,7 @@ function Peoplesays() {
               </div>
             </div>
           </div>
-          <div className="hidden md:block w-1/2"></div>
+          {/* <div className="hidden md:block w-1/2"></div> */}
         </div>
       </div>
     </div>
