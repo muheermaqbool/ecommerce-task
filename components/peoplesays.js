@@ -5,7 +5,7 @@ function Peoplesays() {
     <div className="max-w-7xl mx-auto p-6">
       <div className="relative bg-gray-100 rounded-3xl overflow-hidden">
         <img
-          src="/wome.png"
+          src="/women.jpg"
           alt="Happy customer"
           className="people-bg absolute inset-0 w-full h-full"
         />
@@ -26,7 +26,7 @@ function Peoplesays() {
             {/* Profile Section -> Only visible on mobile */}
             <div className="flex items-center gap-3 block md:hidden">
               <img
-                src="/wome.png"
+                src="/women.jpg"
                 alt="profile"
                 className="w-12 h-12 rounded-full object-cover border border-white/50"
               />
