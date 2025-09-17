@@ -13,6 +13,6 @@
 @media (min-width: 768px) {
   .people-bg {
     object-fit: cover;
-    content: url("/wome.png"); 
+    content: url("/women.jpg"); 
   }
 }
